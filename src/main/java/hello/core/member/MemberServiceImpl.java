@@ -3,7 +3,11 @@ package hello.core.member;
 public class MemberServiceImpl implements MemberService {
 
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository(); // 구현 객체를 선택해주기
+    private final MemberRepository memberRepository;
+
+    public MemberServiceImpl(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     @Override
     public void join(Member member) {
