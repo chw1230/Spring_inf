@@ -1,15 +1,20 @@
 package hello.core.order;
 
 import hello.core.discount.DiscountPolicy;
-import hello.core.discount.FixDiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
-import hello.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService {
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
-    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
+    // 추상화에만 의존 하게 됨 => DIP를 지키자!!
+    private final MemberRepository memberRepository;
+//    private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // 추상과 구체를 모두 의존하고 있음 => DIP 위반
+    private final DiscountPolicy discountPolicy; // 할인 정책 변경에 따른 위의 코드에서 현재 코드로 수정 => OCP 위반
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
