@@ -6,7 +6,7 @@ import org.springframework.context.annotation.FilterType;
 
 @Configuration
 @ComponentScan(
-        basePackages = "hello.core.member", // 탐색할 시작위치 지정하기 이거를 안하면 기본적으로 AutoAppConfig 설정 파일이 위치한 패키지가 시작 위치가됨! => 여기서는 파일이 package hello.core 에 있으므로, 여기서 하위를 다 탐색하게 됨!
+        basePackages = "hello.core", // 탐색할 시작위치 지정하기 이거를 안하면 기본적으로 AutoAppConfig 설정 파일이 위치한 패키지가 시작 위치가됨! => 여기서는 파일이 package hello.core 에 있으므로, 여기서 하위를 다 탐색하게 됨!
         // 그래서 프로젝트의 메인 설정 정보를 프로젝트 시작 루트 튀치에 두는 것이 좋음!
         excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Configuration.class)
 ) // @Component 애노테이션이 붙은 클래스를 스캔해서 스프링 빈으로 등록!, 아까 수동으로 등록(@Configuration)한 애들 뺴주기!
@@ -29,5 +29,4 @@ public class AutoAppConfig {
 
     그래서 기존의 프로젝트에서는 왜 @Component를 붙일일이 없었지라는 생각이 들었는데 그래서 그런거 였구나!!!... 이걸 이제야 알다니...
      */
-
 }
