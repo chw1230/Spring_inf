@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>부분 포함</h1>
+<h2>부분 포함 insert</h2>
+<div th:insert="~{template/fragment/footer :: copy}"></div> <!-- !{경로 :: 해당 경로에 있는 이름} 가져 와서 insert(넣음)! -->
+
+<h2>부분 포함 replace</h2>
+<div th:replace="~{template/fragment/footer :: copy}"></div> <!-- !{경로 :: 해당 경로에 있는 이름} 가져 와서 replace(대체)! -->
+
+<h2>부분 포함 단순 표현식</h2>
+<div th:replace="template/fragment/footer :: copy"></div> <!-- 단순하게 사용 -->
+
+<h1>파라미터 사용</h1>
+<div th:replace="~{template/fragment/footer :: copyParam ('데이터1', '데이터2')}"></div> <!-- !{경로 :: 해당 경로에 있는 이름} 가져 와서 insert(넣음)! / 그리고 추가적으로 데이터를 같이 넘길 수 있음! -> 동적 랜더링 가능 -->
+</body>
+</html>
