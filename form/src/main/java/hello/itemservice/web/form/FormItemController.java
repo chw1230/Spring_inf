@@ -24,7 +24,7 @@ public class FormItemController {
 
     private final ItemRepository itemRepository;
 
-    @ModelAttribute("regions")
+    @ModelAttribute("regions") // 자동으로 모델에 넣어줌!!
     public Map<String, String> regions() {
         Map<String, String> regions = new LinkedHashMap<>();
         regions.put("SEOUL", "서울");
@@ -35,7 +35,7 @@ public class FormItemController {
 
     @ModelAttribute("itemTypes")
     public ItemType[] itemTypes() {
-        return ItemType.values();
+        return ItemType.values(); // ENUM의 모든 정보를 배열로 반환해줌!
     }
 
     @ModelAttribute("deliveryCodes")

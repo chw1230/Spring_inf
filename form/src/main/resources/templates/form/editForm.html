@@ -39,10 +39,11 @@
         <hr class="my-4">
 
         <!-- single checkbox -->
+        <!-- 타임리프를 통해서 html로만 체크박스를 구현 했을 때 선택하지 않으면 아무 것도 넘어오지 않는 히든 필드 관련 문제를 해결하는데 도움을 준다 -->
         <div>판매 여부</div>
         <div>
             <div class="form-check">
-                <input type="checkbox" id="open" th:field="*{open}" class="form-check-input">
+                <input type="checkbox" id="open" th:field="*{open}" class="form-check-input"> <!-- th:field="$={item.open}" -> 이렇게 써도 되지만, 위에서 th:object="${item} 했기 때무에 그냥 th:field="${open}" 이라고 적어도 된다 -->
                 <label for="open" class="form-check-label">판매 오픈</label>
             </div>
         </div>
