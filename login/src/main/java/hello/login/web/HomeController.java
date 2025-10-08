@@ -8,8 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -25,7 +27,7 @@ public class HomeController {
     }
 
 //    @GetMapping("/")
-//    public String homeLogin(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
+//    public String homeLoginV1(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
 //        // 받은 쿠키 확인하기
 //        if (memberId == null) {
 //            return "home";
@@ -40,17 +42,42 @@ public class HomeController {
 //        return "loginHome";
 //    }
 
+//    @GetMapping("/")
+//    public String homeLoginV2(HttpServletRequest request, Model model) {
+//        // 쿠키가 없으면 home 있으면 loginhome
+//
+//        // 세션 관리자에 저장된 회원 정보 조회하기!!
+//        Member member = (Member) sessionManager.getSession(request);
+//        if (member == null) {
+//            return "home";
+//        }
+//
+//        model.addAttribute("member", member);
+//        return "loginHome";
+//    }
+
+//    @GetMapping("/")
+//    public String homeLoginV3(HttpServletRequest request, Model model) {
+//        // 세션이 존재하면 loginhome / 없으면 home
+//        HttpSession session = request.getSession(false);
+//        if (session == null) {
+//            return "/home";
+//        }
+//
+//        Member loginMember = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER); // 세션이 존재하면 세션으로 보관해둔 객체를 꺼내기
+//        if (loginMember == null) { // 세션에 회원 객체가 없으면 home으로 가기
+//            return "/home";
+//        }
+//        model.addAttribute("member", loginMember);
+//        return "loginHome";
+//    }
+
     @GetMapping("/")
-    public String homeLogin(HttpServletRequest request, Model model) {
-        // 쿠키가 없으면 home 있으면 loginhome
-
-        // 세션 관리자에 저장된 회원 정보 조회하기!!
-        Member member = (Member) sessionManager.getSession(request);
-        if (member == null) {
-            return "home";
+    public String homeLoginV3Spring(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember, Model model) {
+        if (loginMember == null) { // 세션에 회원이 없으면 null
+            return "/home";
         }
-
-        model.addAttribute("member", member);
+        model.addAttribute("member", loginMember); // 회원이 존재하면 loginHome 으로 이동
         return "loginHome";
     }
 }

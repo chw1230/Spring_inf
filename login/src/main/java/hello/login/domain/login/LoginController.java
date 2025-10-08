@@ -52,27 +52,27 @@ public class LoginController {
 //        // 이렇게 쿠키를 설정해주면 -> 앞으로 웹 브라우저는 서버에 회원의 id를 지속적으로 전달해줌!
 //    }
 
-    @PostMapping("/login")
-    public String loginV2(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletResponse response) {
-
-        if (bindingResult.hasErrors()) { // 에러이면 다시 폼으로
-            return "login/loginForm";
-        }
-
-        Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
-        log.info("login? {}", loginMember);
-
-        if (loginMember == null) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다."); // 글로벌 오류
-            return "login/loginForm";
-        }
-
-        //로그인 성공 처리
-        // sessionManager를 통해서 세션 생성하고, 회원 데이터에 보관하기!
-        sessionManager.createSession(loginMember, response);
-
-        return "redirect:/";
-    }
+//    @PostMapping("/login")
+//    public String loginV2(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletResponse response) {
+//
+//        if (bindingResult.hasErrors()) { // 에러이면 다시 폼으로
+//            return "login/loginForm";
+//        }
+//
+//        Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
+//        log.info("login? {}", loginMember);
+//
+//        if (loginMember == null) {
+//            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다."); // 글로벌 오류
+//            return "login/loginForm";
+//        }
+//
+//        //로그인 성공 처리
+//        // sessionManager를 통해서 세션 생성하고, 회원 데이터에 보관하기!
+//        sessionManager.createSession(loginMember, response);
+//
+//        return "redirect:/";
+//    }
 
 //    @PostMapping("/logout")
 //    public String logout(HttpServletResponse response) {
@@ -94,17 +94,29 @@ public class LoginController {
         }
 
         Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
+
         log.info("login? {}", loginMember);
         if (loginMember == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "login/loginForm";
         }
         //로그인 성공 처리
-        //세션이 있으면 있는 세션 반환, 없으면 신규 세션 생성
+
+        // 세션이 있으면 있는 세션을 반환하고, 없으면 신규 생성
         HttpSession session = request.getSession();
-        //세션에 로그인 회원 정보 보관
+        // 세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
         return "redirect:/";
+    }
+
+    @PostMapping("/logout")
+    public String logoutV3(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 세션을 없애는 게 목적이니까 가져올때 없으면 만들지 말고 그냥 null 가져오도록!
+        if (session != null) { // 세션이 존재하면
+            session.invalidate(); // 지우기
+        }
+        return "redirect:/";
+
     }
 
     private void expireCookie(HttpServletResponse response, String cookieName) {
