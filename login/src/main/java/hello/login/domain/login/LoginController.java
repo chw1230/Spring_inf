@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -87,29 +88,61 @@ public class LoginController {
 //
 //    }
 
+//    @PostMapping("/login")
+//    public String loginV3(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
+//        if (bindingResult.hasErrors()) {
+//            return "login/loginForm";
+//        }
+//
+//        Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
+//
+//        log.info("login? {}", loginMember);
+//        if (loginMember == null) {
+//            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+//            return "login/loginForm";
+//        }
+//        //로그인 성공 처리
+//
+//        // 세션이 있으면 있는 세션을 반환하고, 없으면 신규 생성
+//        HttpSession session = request.getSession();
+//        // 세션에 로그인 회원 정보 보관
+//        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
+//        return "redirect:/";
+//    }
+
+    /**
+     * 로그인 이후 redirect 처리
+     */
     @PostMapping("/login")
-    public String loginV3(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
+    public String loginV4(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult,
+                          @RequestParam(defaultValue = "/") String redirectURL,
+                          HttpServletRequest request) {
+
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
         }
 
         Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
-
         log.info("login? {}", loginMember);
+
         if (loginMember == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "login/loginForm";
         }
-        //로그인 성공 처리
 
-        // 세션이 있으면 있는 세션을 반환하고, 없으면 신규 생성
+        //로그인 성공 처리
+        //세션이 있으면 있는 세션 반환, 없으면 신규 세션 생성
         HttpSession session = request.getSession();
-        // 세션에 로그인 회원 정보 보관
+        //세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
-        return "redirect:/";
+
+        //redirectURL 적용 - 로그인에 성공하면 처음 요청한 URL로 이동하도록 하기!
+        return "redirect:" + redirectURL;
+        // 흐름 정리 /items 들어가기 하지만 여기는 로그인 했을 때 들어갈 수 있도록 필터 되어 있음 그래서 로그인 창으로 이동됨 이때 url에 유입된 경로를 함꼐 제시
+        // 그 경로를 @RequestParam(defaultValue = "/") String redirectURL로 받아서 로그인 성공했을 때 해당 로직으로 이동 시켜주기!
     }
 
-    @PostMapping("/logout")
+        @PostMapping("/logout")
     public String logoutV3(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 세션을 없애는 게 목적이니까 가져올때 없으면 만들지 말고 그냥 null 가져오도록!
         if (session != null) { // 세션이 존재하면
