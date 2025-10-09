@@ -1,0 +1,24 @@
+package hello.exception;
+
+import hello.exception.resolver.MyHandlerExceptionResolver;
+import org.springframework.boot.web.server.ConfigurableWebServerFactory;
+import org.springframework.boot.web.server.ErrorPage;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+
+import java.util.List;
+
+//@Component
+public class WebServerCustomizer implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
+    // 에러 페이지 등록!
+
+    @Override
+    public void customize(ConfigurableWebServerFactory factory) {
+        ErrorPage errorPage404 = new ErrorPage(HttpStatus.NOT_FOUND, "/error-page/404"); // NOT_FOUND 이면 /errorpage/404 컨트롤러를 호출해라
+        ErrorPage errorPage500 = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error-page/500");
+        ErrorPage errorPageEx = new ErrorPage(RuntimeException.class, "/error-page/500");
+        factory.addErrorPages(errorPage404, errorPage500, errorPageEx);
+    }
+}
